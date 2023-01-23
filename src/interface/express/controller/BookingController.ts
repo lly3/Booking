@@ -39,9 +39,9 @@ class BookingController {
     // validation things eg. authentication, validate form input
 
     // cancel booking
-    const postId = req.params.id
+    const id = req.params.id
     try {
-      this.bookingUseCase.cancelBooking(postId)
+      this.bookingUseCase.cancelBooking(id)
       res.sendStatus(200)
     }
     catch(e) {

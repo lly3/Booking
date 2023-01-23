@@ -39,14 +39,14 @@ class BookingUseCase {
     this.bookingRepository.create(booking)
   }
 
-  cancelBooking(postId: string) {
-    const booking = this.bookingRepository.getById(postId)
+  cancelBooking(id: string) {
+    const booking = this.bookingRepository.getById(id)
     if(booking == undefined) {
-      throw new Error(`Booking Id ${postId} not found`)
+      throw new Error(`Booking Id ${id} not found`)
     }
 
     booking.status = "cancel"
-    this.bookingRepository.update(postId, booking)
+    this.bookingRepository.update(id, booking)
   }
 
   allBooking() {
