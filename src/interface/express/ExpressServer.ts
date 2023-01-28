@@ -2,10 +2,7 @@ import express, { Express } from 'express'
 import PostController from './controller/PostController'
 import BookingController from './controller/BookingController'
 import bodyParser from 'body-parser'
-
-export type ServerConfig = {
-  port: string
-}
+import { Config } from '../../../main'
 
 class ExpressServer {
   app: Express
@@ -48,9 +45,9 @@ class ExpressServer {
     this.app.use('/booking', this.addBookingRoute())
   }
 
-  start(config: ServerConfig) {
-    this.app.listen(config.port, () => {
-      console.log('Server is running at port '+config.port)
+  start(config: Config) {
+    this.app.listen(config.PORT, () => {
+      console.log('Server is running at port ' + config.PORT)
     })
   }
 }
