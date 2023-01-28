@@ -1,7 +1,7 @@
 interface Repository<T> {
-  getAll(): T[]
-  getById(id: string): T | undefined
-  create(item: T): void
-  update(id: string, item: T): void
-  delete(id: string): void
+  getAll(): Promise<T[]>
+  getById(id: string): Promise<T | undefined>
+  create(item: T): Promise<void>
+  update(id: string, item: T): Promise<void>
+  delete(id: string): Promise<void>
 }
