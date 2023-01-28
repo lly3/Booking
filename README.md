@@ -3,7 +3,12 @@ Simple hotel booking with clean architecture (backend)
 
 # Project setup
 ```sh
-yarn install
+# create docker volume
+docker volume create myvol
 
-yarn dev
+# build and serve application
+docker compose up
+
+# or for deamon mode
+docker compose up -d
 ```
