@@ -43,6 +43,8 @@ describe('testing booking', () => {
   })
 
   test('invalid date time', async () => {
+    expect.assertions(1)
+
     const postId = "0"
 
     const bookingRequest: BookingRequest = {
@@ -61,6 +63,8 @@ describe('testing booking', () => {
   })
 
   test('invalid post id', async () => {
+    expect.assertions(1)
+
     const postId = "214" // invalid post id
 
     const bookingRequest: BookingRequest = {
@@ -79,6 +83,8 @@ describe('testing booking', () => {
   })
 
   test('the post is already booked', async () => {
+    expect.assertions(1)
+
     const postId = "0"
 
     const bookingRequest: BookingRequest = {
