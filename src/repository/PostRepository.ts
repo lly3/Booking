@@ -1,57 +1,67 @@
 import Post from "../entities/Post";
-
-// mock in-memory database
-let postList: Post[] = [
-  {
-    id: "0",
-    title: "hello",
-    detail: "world",
-    location: "earth",
-    price: 699,
-    quantity: 2,
-    portion: {
-      adults: 1
-    },
-    reviewScore: 5.00,
-    owner: "0",
-  }
-]
+import {Db, Collection} from 'mongodb'
 
 class PostRepository implements Repository<Post> {
+  postCollection?: Collection<Post>
 
-  getAll(): Promise<Post[]> {
-    return new Promise((reslove, reject) => {
-      return reslove(postList)
-    })
+  constructor(db: Db) {
+    const collection = "post"
+    this.postCollection = db.collection(collection)
   }
 
-  getById(id: string): Promise<Post | undefined> {
-    return new Promise((reslove, reject) => {
-      return reslove(postList.find(post => post.id == id))
-    })
+  async getAll(): Promise<Post[]> {
+    const postsDoc = await this.postCollection?.find({}).toArray()
+    if(postsDoc == null) {
+      return []
+    }
+
+    const posts = postsDoc?.map(postDoc => {
+      return new Post(
+        postDoc.id,
+        postDoc.title,
+        postDoc.detail,
+        postDoc.location,
+        postDoc.price,
+        postDoc.quantity,
+        postDoc.portion,
+        postDoc.reviewScore,
+        postDoc.owner
+      )
+    }) 
+
+    return posts
   }
 
-  create(item: Post): Promise<void> {
-    return new Promise((reslove, reject) => {
-      postList.push(item)
-    })
+  async getById(id: string): Promise<Post | undefined> {
+    const postDoc = await this.postCollection?.findOne({id: id})
+    if(postDoc == null) {
+      return 
+    }
+    const post = new Post(
+      postDoc.id,
+      postDoc.title,
+      postDoc.detail,
+      postDoc.location,
+      postDoc.price,
+      postDoc.quantity,
+      postDoc.portion,
+      postDoc.reviewScore,
+      postDoc.owner
+    )
+
+    return post
   }
 
-  update(id: string, item: Post): Promise<void> {
-    return new Promise((reslove, reject) => {
-      let post = postList.find(post => post.id == id)
-      if (post == undefined) {
-        reject(new Error(`Post Id: ${id} not found`))
-      }
-
-      post = { ...item }
-    })
+  async create(item: Post): Promise<void> {
+    this.postCollection?.insertOne(item)
   }
 
-  delete(id: string): Promise<void> {
-    return new Promise((reslove, reject) => {
-      postList = postList.filter(post => post.id != id)
-    })
+  async update(id: string, item: Post): Promise<void> {
+    this.postCollection?.updateOne({id: id}, {...item})
+  }
+
+  async delete(id: string): Promise<void> {
+    this.postCollection?.deleteOne({id: id})
   }
 }
 

@@ -1,51 +1,62 @@
 import Booking from "../entities/Booking";
-
-// mock in-memory database
-let bookingList: Booking[] = [
-  {
-    id: "0",
-    clientId: "0",
-    postId: "0",
-    from: new Date("2023-01-20"),
-    to: new Date("2023-01-24"),
-    status: "booked"
-  }
-]
+import {Db, Collection} from 'mongodb'
 
 class BookingRepository implements Repository<Booking> {
-  getAll(): Promise<Booking[]> {
-    return new Promise((reslove, reject) => {
-      return reslove(bookingList)
-    })
+  bookingCollections?: Collection<Booking>
+
+  constructor(db: Db) {
+    const collection = "booking"
+    this.bookingCollections = db.collection(collection)
   }
 
-  getById(id: string): Promise<Booking | undefined> {
-    return new Promise((reslove, reject) => {
-      return reslove(bookingList.find(booking => booking.id == id))
+  async getAll(): Promise<Booking[]> {
+    const bookingListDoc = await this.bookingCollections?.find({}).toArray()
+    if(bookingListDoc == null) {
+      return []
+    }
+
+    const bookingList = bookingListDoc?.map(bookingDoc => {
+      return new Booking(
+        bookingDoc.id,
+        bookingDoc.clientId,
+        bookingDoc.postId,
+        bookingDoc.from,
+        bookingDoc.to,
+        bookingDoc.status,
+      )
     })
+
+    return bookingList
   }
 
-  create(item: Booking): Promise<void> {
-    return new Promise((reslove, reject) => {
-      bookingList.push(item)
-    })
+  async getById(id: string): Promise<Booking | undefined> {
+    const bookingDoc = await this.bookingCollections?.findOne({id: id})
+    if(bookingDoc == null) {
+      return
+    }
+
+    const booking = new Booking(
+      bookingDoc.id,
+      bookingDoc.clientId,
+      bookingDoc.postId,
+      bookingDoc.from,
+      bookingDoc.to,
+      bookingDoc.status,
+    )
+
+    return booking
   }
 
-  update(id: string, item: Booking): Promise<void> {
-    return new Promise((reslove, reject) => {
-      let booking = bookingList.find(booking => booking.id == id)
-      if (booking == undefined) {
-        reject(new Error(`Booking Id ${id} not found`))
-      }
-
-      booking = { ...item }
-    })
+  async create(item: Booking): Promise<void> {
+    this.bookingCollections?.insertOne(item)
   }
 
-  delete(id: string): Promise<void> {
-    return new Promise((reslove, reject) => {
-      bookingList = bookingList.filter(booking => booking.id != id)
-    })
+  async update(id: string, item: Booking): Promise<void> {
+    this.bookingCollections?.updateOne({id: id}, {...item})
+  }
+
+  async delete(id: string): Promise<void> {
+    this.bookingCollections?.deleteOne({id: id})
   }
 }
 
