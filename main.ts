@@ -22,7 +22,7 @@ const initRepository = () => {
 
 const initUseCase = (postRepository: PostRepository, bookingRepository: BookingRepository) => {
   const postUseCase = new PostUseCase(postRepository)
-  const bookingUseCase = new BookingUseCase(bookingRepository)
+  const bookingUseCase = new BookingUseCase(bookingRepository, postRepository)
 
   return {postUseCase, bookingUseCase}
 }
