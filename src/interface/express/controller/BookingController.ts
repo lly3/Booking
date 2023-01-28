@@ -1,11 +1,20 @@
 import { Request, Response } from "express"
-import BookingUseCase from "../../../use_case/Booking"
+import BookingUseCase, { BookingRequest } from "../../../use_case/Booking"
 
 export type CreateBookingRequest = {
   clientId: string
   postId: string
-  from: Date
-  to: Date
+  from: string
+  to: string
+}
+
+function toBookingRequestUseCase(createBookingRequest: CreateBookingRequest): BookingRequest {
+  return {
+    clientId: createBookingRequest.clientId,
+    postId: createBookingRequest.postId,
+    from: new Date(createBookingRequest.from),
+    to: new Date(createBookingRequest.to)
+  }
 }
 
 class BookingController {
@@ -19,12 +28,13 @@ class BookingController {
     // validation things eg. authentication, validate form input
 
     // create booking
-    const bookingRequest: CreateBookingRequest = {
+    const createBookingRequest: CreateBookingRequest = {
       clientId: req.body.clientId,
       postId: req.body.postId,
-      from: new Date(req.body.from),
-      to: new Date(req.body.to),
+      from: req.body.from,
+      to: req.body.to,
     }
+    const bookingRequest = toBookingRequestUseCase(createBookingRequest)
     try {
       this.bookingUseCase.createBooking(bookingRequest)
       res.sendStatus(200)
