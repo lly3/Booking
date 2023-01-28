@@ -26,7 +26,7 @@ beforeEach(() => {
   bookingUseCase = new BookingUseCase(mockBookingRepository, mockPostRepository)
 })
 
-describe('testing booking', () => {
+describe('test booking', () => {
   test('book successfully', async () => {
     const postId = "0"
 
