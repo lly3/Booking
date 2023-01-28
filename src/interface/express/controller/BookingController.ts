@@ -60,8 +60,8 @@ class BookingController {
     }
   }
 
-  allBooking(req: Request, res: Response) {
-    res.json(this.bookingUseCase.allBooking())
+  async allBooking(req: Request, res: Response) {
+    res.json(await this.bookingUseCase.allBooking())
   }
 }
 

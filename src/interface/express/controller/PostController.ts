@@ -46,8 +46,8 @@ class PostController {
     }
   }
 
-  allPost(req: Request, res: Response) {
-    const posts = this.postUseCase.allPost()
+  async allPost(req: Request, res: Response) {
+    const posts = await this.postUseCase.allPost()
     res.json(posts)
   }
 }
