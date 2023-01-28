@@ -13,29 +13,39 @@ let bookingList: Booking[] = [
 ]
 
 class BookingRepository implements Repository<Booking> {
-  getAll(): Booking[] {
-    return bookingList     
+  getAll(): Promise<Booking[]> {
+    return new Promise((reslove, reject) => {
+      return reslove(bookingList)
+    })
   }
 
-  getById(id: string): Booking | undefined {
-    return bookingList.find(booking => booking.id == id)
+  getById(id: string): Promise<Booking | undefined> {
+    return new Promise((reslove, reject) => {
+      return reslove(bookingList.find(booking => booking.id == id))
+    })
   }
 
-  create(item: Booking): void {
-    bookingList.push(item)
+  create(item: Booking): Promise<void> {
+    return new Promise((reslove, reject) => {
+      bookingList.push(item)
+    })
   }
 
-  update(id: string, item: Booking): void {
-    let booking = bookingList.find(booking => booking.id == id)
-    if(booking == undefined) {
-      throw new Error(`Booking Id ${id} not found`)
-    }
+  update(id: string, item: Booking): Promise<void> {
+    return new Promise((reslove, reject) => {
+      let booking = bookingList.find(booking => booking.id == id)
+      if (booking == undefined) {
+        reject(new Error(`Booking Id ${id} not found`))
+      }
 
-    booking = {...item}
+      booking = { ...item }
+    })
   }
 
-  delete(id: string): void {
-    bookingList = bookingList.filter(booking => booking.id != id)
+  delete(id: string): Promise<void> {
+    return new Promise((reslove, reject) => {
+      bookingList = bookingList.filter(booking => booking.id != id)
+    })
   }
 }
 

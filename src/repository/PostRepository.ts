@@ -19,29 +19,39 @@ let postList: Post[] = [
 
 class PostRepository implements Repository<Post> {
 
-  getAll(): Post[] {
-    return postList
+  getAll(): Promise<Post[]> {
+    return new Promise((reslove, reject) => {
+      return reslove(postList)
+    })
   }
 
-  getById(id: string): Post | undefined {
-    return postList.find(post => post.id == id)
+  getById(id: string): Promise<Post | undefined> {
+    return new Promise((reslove, reject) => {
+      return reslove(postList.find(post => post.id == id))
+    })
   }
 
-  create(item: Post): void {
-    postList.push(item)
+  create(item: Post): Promise<void> {
+    return new Promise((reslove, reject) => {
+      postList.push(item)
+    })
   }
 
-  update(id: string, item: Post): void {
-    let post = postList.find(post => post.id == id)
-    if(post == undefined) {
-      throw new Error(`Post Id: ${id} not found`)
-    }
+  update(id: string, item: Post): Promise<void> {
+    return new Promise((reslove, reject) => {
+      let post = postList.find(post => post.id == id)
+      if (post == undefined) {
+        reject(new Error(`Post Id: ${id} not found`))
+      }
 
-    post = { ...item }
+      post = { ...item }
+    })
   }
 
-  delete(id: string): void {
-    postList = postList.filter(post => post.id != id)
+  delete(id: string): Promise<void> {
+    return new Promise((reslove, reject) => {
+      postList = postList.filter(post => post.id != id)
+    })
   }
 }
 
