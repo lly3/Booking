@@ -1,5 +1,5 @@
 import { Request, Response } from "express"
-import BookingUseCase, { BookingRequest } from "../../../use_case/Booking"
+import BookingUseCase, {BookingRequest} from "../../../use_case/Booking"
 
 export type CreateBookingRequest = {
   clientId: string

@@ -9,16 +9,24 @@ services:
       - ./src:/app/src
     ports:
       - "3000:3000"
-    links:
+    depends_on:
       - mongo
+    networks:
+      - myapp
   mongo:
     container_name: mongo
     image: mongo
     volumes:
-    - myvol:/data/db
+      - myvol:/data/db
     ports:
-    - '27018:27017'
+      - '27018:27017'
+    networks:
+      - myapp
 
 volumes:
   myvol:
+    external: true
+
+networks:
+  myapp:
     external: true
