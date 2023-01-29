@@ -5,6 +5,8 @@ Simple hotel booking with clean architecture (backend)
 ```sh
 # create docker volume
 docker volume create myvol
+# create docker network
+docker network create myapp
 
 # build and serve application
 docker compose up
